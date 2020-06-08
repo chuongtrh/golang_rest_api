@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"demo_api/src/config"
-	module "demo_api/src/module"
+	"demo_api/src/module"
 	"demo_api/src/util"
 	"net/http"
 	"os"
@@ -11,7 +11,7 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
-	middleware "github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/middleware"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"go.uber.org/fx"
@@ -49,7 +49,7 @@ func register(lc fx.Lifecycle, e *echo.Echo, db *gorm.DB) {
 			},
 			OnStop: func(ctx context.Context) error {
 				log.Info().Msg("Shutting down server.")
-				db.Close()
+				_ = db.Close()
 				return e.Close()
 			},
 		},

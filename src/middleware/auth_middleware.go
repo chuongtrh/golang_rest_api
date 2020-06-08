@@ -1,8 +1,8 @@
-package middlewares
+package middleware
 
 import (
 	"demo_api/src/config"
-	"demo_api/src/utils"
+	"demo_api/src/util"
 	"errors"
 	"net/http"
 
@@ -25,8 +25,8 @@ func checkAuthenticate(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	claims := &utils.Claims{}
-	err = utils.DecodeToken(token, claims, config.Cfg.JwtKey)
+	claims := &util.Claims{}
+	err = util.DecodeToken(token, claims, config.Cfg.JwtKey)
 	if err != nil {
 		log.Error().Msg(err.Error())
 		return err
@@ -36,6 +36,7 @@ func checkAuthenticate(c echo.Context) error {
 	return nil
 }
 
+// IsAuthenticate func
 func IsAuthenticate(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if err := checkAuthenticate(c); err != nil {
@@ -45,13 +46,14 @@ func IsAuthenticate(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+// CheckPermission func
 func CheckPermission(roles []string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			if err := checkAuthenticate(c); err != nil {
 				return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
 			}
-			claims := c.Get("user").(*utils.Claims)
+			claims := c.Get("user").(*util.Claims)
 			log.Info().Msgf("claims:%+v", claims)
 			if funk.Contains(roles, claims.Role) {
 				return next(c)

@@ -2,26 +2,33 @@ package auth
 
 import (
 	"demo_api/src/config"
-	"demo_api/src/modules/dto"
-	"demo_api/src/modules/user"
-	"demo_api/src/utils"
+	"demo_api/src/dto"
+	"demo_api/src/module/user"
+	"demo_api/src/util"
 	"net/http"
 
 	"github.com/labstack/echo"
 	"github.com/rs/zerolog/log"
 )
 
-type Controller struct {
+// Controller interface
+type Controller interface {
+	Login(c echo.Context) error
+	Refresh(c echo.Context) error
+}
+
+type controller struct {
 	userService user.Service
 }
 
-func NewAuthController(userService user.Service) Controller {
-	return Controller{
+// NewAuthController func
+func NewAuthController(userService user.Service) (Controller, error) {
+	return &controller{
 		userService: userService,
-	}
+	}, nil
 }
 
-func (controller Controller) Login(c echo.Context) error {
+func (controller *controller) Login(c echo.Context) error {
 	loginDTO := new(dto.LoginDTO)
 	if err := c.Bind(loginDTO); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
@@ -37,7 +44,7 @@ func (controller Controller) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	token, refreshToken, err := utils.CreateAuthTokenPair(user.Email, user.ID, user.Role, config.Cfg.JwtKey, config.Cfg.JwtExp)
+	token, refreshToken, err := util.CreateAuthTokenPair(user.Email, user.ID, user.Role, config.Cfg.JwtKey, config.Cfg.JwtExp)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
@@ -49,7 +56,7 @@ func (controller Controller) Login(c echo.Context) error {
 	})
 }
 
-func (controller Controller) Refresh(c echo.Context) error {
+func (controller *controller) Refresh(c echo.Context) error {
 	log.Info().Msg("Refresh")
 	return c.JSON(http.StatusOK, "Refresh")
 }

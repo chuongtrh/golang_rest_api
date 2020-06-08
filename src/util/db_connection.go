@@ -1,14 +1,14 @@
-package utils
+package util
 
 import (
 	"demo_api/src/config"
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/rs/zerolog/log"
 )
 
+// CreateConnectionDB func
 func CreateConnectionDB() (*gorm.DB, error) {
 	Driver := config.Cfg.DbDriver
 	DbHost := config.Cfg.DbHost
@@ -18,10 +18,12 @@ func CreateConnectionDB() (*gorm.DB, error) {
 	DbPort := config.Cfg.DbPort
 	url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", DbHost, DbPort, DbUser, DbName, DbPassword)
 	db, err := gorm.Open(Driver, url)
-	//defer db.Close()
+	// defer db.Close()
+
+	log.Info().Msgf("DbHost %s", DbHost)
 
 	if err != nil {
-		log.Fatal().Msgf("This is the error:", err)
+		log.Error().Msgf("This is the error: %s", err)
 	} else {
 		log.Info().Msgf("We are connected to the %s database", Driver)
 		db.LogMode(true)

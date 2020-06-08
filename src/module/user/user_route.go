@@ -14,4 +14,5 @@ func LoadRoute(e *echo.Echo, controller Controller) {
 	g.GET("/me", controller.GetMyProfile, middleware.IsAuthenticate)
 	g.GET("", controller.GetAll, middleware.CheckPermission([]string{RoleAdmin}))
 	g.GET("/:id", controller.GetUser, middleware.CheckPermission([]string{RoleAdmin}))
+	g.POST("/register", controller.Register)
 }

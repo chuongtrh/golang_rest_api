@@ -11,6 +11,8 @@ type Repository interface {
 	GetAll() ([]User, error)
 	GetUser(id uint64) (User, error)
 	GetUserByEmail(email string) (User, error)
+	CheckEmailExist(emai string) (bool, error)
+	Create(email string, password string, role string) (User, error)
 }
 
 // NewUserRepository func
@@ -58,4 +60,22 @@ func (repo *repository) GetAll() ([]User, error) {
 		return users, err
 	}
 	return users, err
+}
+
+func (repo *repository) CheckEmailExist(email string) (bool, error) {
+	var err error
+	count := 0
+	err = repo.db.Raw("SELECT count(*) FROM users WHERE email = ?", email).Count(&count).Error
+	if err != nil {
+		return count > 0, err
+	}
+	if gorm.IsRecordNotFoundError(err) {
+		return count > 0, errors.New("user not found")
+	}
+	return count > 0, err
+}
+func (repo *repository) Create(email string, password string, role string) (User, error) {
+	user := User{Email: email, Password: password, Role: role}
+	repo.db.Create(&user)
+	return user, nil
 }

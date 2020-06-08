@@ -2,9 +2,8 @@ package user
 
 import (
 	"demo_api/src/dto"
+	"demo_api/src/util"
 	"errors"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 // Service interface
@@ -12,6 +11,8 @@ type Service interface {
 	GetAll() ([]User, error)
 	GetUser(id uint64) (User, error)
 	Login(dto *dto.LoginDTO) (User, error)
+	CheckEmailExist(email string) (bool, error)
+	Create(email string, password string, role string) (User, error)
 }
 
 // NewUserService func
@@ -37,9 +38,17 @@ func (service *service) Login(dto *dto.LoginDTO) (User, error) {
 	if err != nil {
 		return User{}, errors.New("wrong email")
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(dto.Password))
+	err = util.CompareHashPassword(dto.Password, user.Password)
 	if err != nil {
 		return User{}, errors.New("wrong password")
 	}
 	return user, nil
+}
+
+func (service *service) CheckEmailExist(email string) (bool, error) {
+	return service.repository.CheckEmailExist(email)
+}
+
+func (service *service) Create(email string, password string, role string) (User, error) {
+	return service.repository.Create(email, password, role)
 }

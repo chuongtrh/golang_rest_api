@@ -8,7 +8,6 @@ import (
 	"log"
 
 	"github.com/jinzhu/gorm"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func migrate(db *gorm.DB) {
@@ -17,12 +16,11 @@ func migrate(db *gorm.DB) {
 }
 
 func seed(db *gorm.DB) {
-	password, _ := bcrypt.GenerateFromPassword([]byte("12345678"), bcrypt.DefaultCost)
-	println("password:", string(password))
+	password := util.HashPassword("12345678")
 
 	var user = &user.User{
 		Email:    "admin@yopmail.com",
-		Password: string(password),
+		Password: password,
 		Role:     user.RoleAdmin,
 	}
 	db.Save(user)

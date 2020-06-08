@@ -8,6 +8,7 @@ import (
 const (
 	RoleAdmin   string = "admin"
 	RoleManager string = "manager"
+	RoleUser    string = "user"
 )
 
 // User struct

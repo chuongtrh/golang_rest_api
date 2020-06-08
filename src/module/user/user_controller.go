@@ -1,12 +1,14 @@
 package user
 
 import (
+	"demo_api/src/dto"
 	"demo_api/src/util"
 	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo"
+	"github.com/rs/zerolog/log"
 )
 
 // Controller interface
@@ -14,6 +16,7 @@ type Controller interface {
 	GetMyProfile(c echo.Context) error
 	GetAll(c echo.Context) error
 	GetUser(c echo.Context) error
+	Register(c echo.Context) error
 }
 
 // NewUserController func
@@ -57,6 +60,34 @@ func (controller *controller) GetUser(c echo.Context) error {
 	user, err := controller.userService.GetUser(id)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, errors.New("Not found"))
+	}
+	return c.JSON(http.StatusOK, user.ToObject())
+}
+
+func (controller *controller) Register(c echo.Context) error {
+	registerDTO := new(dto.RegisterDTO)
+	if err := c.Bind(registerDTO); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	if errs := c.Validate(registerDTO); errs != nil {
+		log.Error().Msg(errs.Error())
+		return c.JSON(http.StatusBadRequest, errs.Error())
+	}
+
+	isEmailExisted, err := controller.userService.CheckEmailExist(registerDTO.Email)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	if isEmailExisted {
+		return c.JSON(http.StatusBadRequest, "Email is existed")
+	}
+
+	password := util.HashPassword(registerDTO.Password)
+	println("password:", password)
+
+	user, err := controller.userService.Create(registerDTO.Email, password, RoleUser)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, user.ToObject())
 }

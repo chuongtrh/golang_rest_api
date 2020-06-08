@@ -2,15 +2,13 @@ package main
 
 import (
 	"demo_api/src/config"
-	"demo_api/src/modules/user"
-	"demo_api/src/utils"
+	"demo_api/src/module/user"
+	"demo_api/src/util"
 	"fmt"
-
-	"golang.org/x/crypto/bcrypt"
-
 	"log"
 
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func migrate(db *gorm.DB) {
@@ -38,8 +36,7 @@ func main() {
 	} else {
 		fmt.Println("We are getting the env values")
 	}
-
-	if db, err := utils.CreateConnectionDB(); err != nil {
+	if db, err := util.CreateConnectionDB(); err != nil {
 	} else {
 		defer db.Close()
 		migrate(db)

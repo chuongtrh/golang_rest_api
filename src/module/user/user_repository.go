@@ -6,21 +6,28 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Repository struct {
+// Repository interface
+type Repository interface {
+	GetAll() ([]User, error)
+	GetUser(id uint64) (User, error)
+	GetUserByEmail(email string) (User, error)
+}
+
+// NewUserRepository func
+func NewUserRepository(db *gorm.DB) (Repository, error) {
+	return &repository{
+		db: db,
+	}, nil
+}
+
+type repository struct {
 	db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) Repository {
-
-	return Repository{
-		db: db,
-	}
-}
-
-func (repo Repository) GetUser(id int64) (User, error) {
+func (repo *repository) GetUser(id uint64) (User, error) {
 	var err error
 	var u User
-	err = repo.db.Raw("SELECT * FROM User WHERE id = ?", id).Scan(&u).Error
+	err = repo.db.Raw("SELECT * FROM users WHERE id = ?", id).Scan(&u).Error
 	if err != nil {
 		return u, err
 	}
@@ -30,7 +37,7 @@ func (repo Repository) GetUser(id int64) (User, error) {
 	return u, err
 }
 
-func (repo Repository) GetUserByEmail(email string) (User, error) {
+func (repo *repository) GetUserByEmail(email string) (User, error) {
 	var err error
 	var u User
 	err = repo.db.Raw("SELECT * FROM users WHERE email = ?", email).Scan(&u).Error
@@ -43,7 +50,7 @@ func (repo Repository) GetUserByEmail(email string) (User, error) {
 	return u, err
 }
 
-func (repo Repository) GetAll() ([]User, error) {
+func (repo *repository) GetAll() ([]User, error) {
 	var err error
 	var users []User
 	err = repo.db.Find(&users).Error

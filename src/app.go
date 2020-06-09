@@ -23,7 +23,14 @@ func initEcho() *echo.Echo {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${time_unix} ${id} ${method} ${uri} ${status} ${latency_human}\n",
 	}))
+	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
+	e.Use(middleware.Secure())
+	e.Use(middleware.Gzip())
+
+	e.Use(middleware.CSRF())
+	e.Use(middleware.CORS())
+
 	return e
 }
 

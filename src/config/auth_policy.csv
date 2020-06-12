@@ -1,0 +1,6 @@
+p, *, /api/ping, GET
+p, *, /api/auth/login, POST
+p, *, /api/user/register, POST
+p, *, /api/user/me, GET
+p, admin, /api/user, GET
+p, admin, /api/user/:id, GET

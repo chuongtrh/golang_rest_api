@@ -1,9 +1,7 @@
 package auth
 
 import (
-	"demo_api/src/middleware"
-
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 )
 
@@ -13,5 +11,5 @@ func LoadRoute(e *echo.Echo, controller Controller) {
 
 	g := e.Group("/api/auth")
 	g.POST("/login", controller.Login)
-	g.GET("/refresh", controller.Refresh, middleware.IsAuthenticate)
+	g.GET("/refresh", controller.Refresh)
 }

@@ -23,7 +23,7 @@ func CreateConnectionDB() (*gorm.DB, error) {
 	log.Info().Msgf("DbHost %s", DbHost)
 
 	if err != nil {
-		log.Error().Msgf("This is the error: %s", err)
+		log.Panic().Msgf("This is the error: %s", err)
 	} else {
 		log.Info().Msgf("We are connected to the %s database", Driver)
 		db.LogMode(true)

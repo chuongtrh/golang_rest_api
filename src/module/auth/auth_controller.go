@@ -7,7 +7,7 @@ import (
 	"demo_api/src/util"
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 )
 

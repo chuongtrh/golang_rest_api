@@ -5,10 +5,11 @@ A API service boilerplate
   * [Echo](https://github.com/labstack/echo) High performance, extensible, minimalist Go web framework
   * [gorm](https://gorm.io) The fantastic ORM library for Golang
   * [uber-fx](https://github.com/uber-go/fx) A dependency injection based application framework for Go
-  * [zerolog](https://github.com/rs/zerolog) Zero Allocation JSON Logger
+  * [zap](https://github.com/uber-go/zap) Blazing fast, structured, leveled logging in Go.
   * [godotenv](https://github.com/joho/godotenv) Loads environment variables from `.env`.
   * [jwt-go](https://github.com/dgrijalva/jwt-go) Golang implementation of JSON Web Tokens (JWT)
-  * [validator](https://github.com/go-playground/validator) 💯Go Struct and Field validation, including Cross Field, Cross Struct, Map, Slice and Array diving
+  * [validator](https://github.com/go-playground/validator) 💯 Go Struct and Field validation, including Cross Field, Cross Struct, Map, Slice and Array diving
+
 # Todo
 
 - [x] Use Go Modules

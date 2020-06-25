@@ -3,12 +3,12 @@ package user
 import (
 	"demo_api/src/dto"
 	"demo_api/src/util"
+	"demo_api/src/util/logger"
 	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog/log"
 )
 
 // Controller interface
@@ -32,7 +32,7 @@ type controller struct {
 
 func (controller *controller) GetMyProfile(c echo.Context) error {
 	claims := c.Get("user").(*util.Claims)
-	//log.Info().Msgf("claims:%+v", claims)
+	//logger.Infof("claims:%+v", claims)
 
 	id := uint64(claims.ID)
 	user, err := controller.userService.GetUser(id)
@@ -70,7 +70,7 @@ func (controller *controller) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	if errs := c.Validate(registerDTO); errs != nil {
-		log.Error().Msg(errs.Error())
+		logger.Error(errs.Error())
 		return c.JSON(http.StatusBadRequest, errs.Error())
 	}
 

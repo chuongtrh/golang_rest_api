@@ -5,10 +5,10 @@ import (
 	"demo_api/src/dto"
 	"demo_api/src/module/user"
 	"demo_api/src/util"
+	"demo_api/src/util/logger"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog/log"
 )
 
 // Controller interface
@@ -35,7 +35,7 @@ func (controller *controller) Login(c echo.Context) error {
 	}
 
 	if errs := c.Validate(loginDTO); errs != nil {
-		log.Error().Msg(errs.Error())
+		logger.Error(errs.Error())
 		return c.JSON(http.StatusBadRequest, errs.Error())
 	}
 
@@ -57,6 +57,6 @@ func (controller *controller) Login(c echo.Context) error {
 }
 
 func (controller *controller) Refresh(c echo.Context) error {
-	log.Info().Msg("Refresh")
+	logger.Info("Refresh")
 	return c.JSON(http.StatusOK, "Refresh")
 }

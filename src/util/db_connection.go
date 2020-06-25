@@ -2,10 +2,10 @@ package util
 
 import (
 	"demo_api/src/config"
+	"demo_api/src/util/logger"
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"github.com/rs/zerolog/log"
 )
 
 // CreateConnectionDB func
@@ -20,12 +20,12 @@ func CreateConnectionDB() (*gorm.DB, error) {
 	db, err := gorm.Open(Driver, url)
 	// defer db.Close()
 
-	log.Info().Msgf("DbHost %s", DbHost)
+	logger.Infof("DbHost %s", DbHost)
 
 	if err != nil {
-		log.Panic().Msgf("This is the error: %s", err)
+		logger.Panicf("This is the error: %s", err)
 	} else {
-		log.Info().Msgf("We are connected to the %s database", Driver)
+		logger.Infof("We are connected to the %s database", Driver)
 		db.LogMode(true)
 	}
 

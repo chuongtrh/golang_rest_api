@@ -3,11 +3,11 @@ package middleware
 import (
 	"demo_api/src/config"
 	"demo_api/src/util"
+	"demo_api/src/util/logger"
 	"github.com/casbin/casbin/v2"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog/log"
 )
 
 func getJWTFromHeader(c echo.Context, header string, authScheme string) (string, bool) {
@@ -30,7 +30,7 @@ func checkAuthenticate(c echo.Context) (string, error) {
 		return "*", err
 	}
 	c.Set("user", claims)
-	log.Info().Msgf("claims:%+v", claims)
+	logger.Infof("claims:%+v", claims)
 	return claims.Role, nil
 }
 
@@ -38,7 +38,7 @@ func checkAuthenticate(c echo.Context) (string, error) {
 func checkPermission(ce *casbin.Enforcer, c echo.Context) (bool, error) {
 	role, err := checkAuthenticate(c)
 	if err != nil {
-		log.Error().Msgf(err.Error())
+		logger.Errorf(err.Error())
 		return false, err
 	}
 

@@ -1,5 +1,5 @@
 # golang_rest_api
-A API service boilerplate
+An API service boilerplate
 
 # Using
   * [Echo](https://github.com/labstack/echo) High performance, extensible, minimalist Go web framework
